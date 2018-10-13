@@ -1,0 +1,1 @@
+include ':app', ':lintrule_lib', ':lintrule_aar', ':lintplugin'

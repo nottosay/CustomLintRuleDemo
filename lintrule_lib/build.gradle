@@ -1,0 +1,20 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+jar {
+    manifest {
+        attributes('Lint-Registry-v2': 'com.tal.xes.lint.lintrule.LintIssueRegister')
+    }
+}
+
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compileOnly 'com.android.tools.lint:lint-api:26.0.1'
+    compileOnly 'com.android.tools.lint:lint-checks:26.0.1'
+}
+
