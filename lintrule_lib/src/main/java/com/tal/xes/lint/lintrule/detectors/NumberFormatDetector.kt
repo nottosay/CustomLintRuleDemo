@@ -2,7 +2,10 @@ package com.tal.xes.lint.lintrule.detectors
 
 import com.android.tools.lint.detector.api.*
 import com.intellij.psi.PsiMethod
-import org.jetbrains.uast.*
+import org.jetbrains.uast.UCallExpression
+import org.jetbrains.uast.UElement
+import org.jetbrains.uast.UMethod
+import org.jetbrains.uast.UTryExpression
 import java.util.*
 
 
@@ -34,7 +37,7 @@ class NumberFormatDetector : Detector(), Detector.UastScanner {
 
     override fun getApplicableMethodNames(): MutableList<String> {
         return Arrays.asList(
-                "parseInt","parseFloat","parseDouble")
+                "parseInt", "parseFloat", "parseDouble")
     }
 
     override fun visitMethod(context: JavaContext, node: UCallExpression, method: PsiMethod) {
@@ -43,10 +46,10 @@ class NumberFormatDetector : Detector(), Detector.UastScanner {
         if (!evaluator.isMemberInClass(method, INTEGER_CLS) && !evaluator.isMemberInClass(method, FLOAT_CLS) && !evaluator.isMemberInClass(method, DOUBLE_CLS)) {
             return;
         }
-        val parent = hasTy(node.uastParent)
+        val parent = hasTry(node.uastParent)
         if (parent != null && parent is UTryExpression) {
-            for (uc in parent.catchClauses){
-                if(uc.typeReferences.toString().contains("java.lang.Exception")|| uc.typeReferences.toString().contains("java.lang.NumberFormatException")){
+            for (uc in parent.catchClauses) {
+                if (uc.typeReferences.toString().contains("java.lang.Exception") || uc.typeReferences.toString().contains("java.lang.NumberFormatException")) {
                     return
                 }
             }
@@ -56,13 +59,13 @@ class NumberFormatDetector : Detector(), Detector.UastScanner {
         context.report(NumberFormatDetector.ISSUE, node, location, NumberFormatDetector.ISSUE_DESCRIPTION)
     }
 
-   private fun hasTy(element: UElement?): UElement? {
+    private fun hasTry(element: UElement?): UElement? {
         if (element is UTryExpression) {
             return element
-        }else if (element is UMethod) {
+        } else if (element is UMethod) {
             return null
         } else {
-            return hasTy(element?.uastParent)
+            return hasTry(element?.uastParent)
         }
     }
 }

@@ -53,8 +53,8 @@ class IndexOutOfBoundsDetector : Detector(), Detector.UastScanner {
         }
 
         if (parent != null && parent is UTryExpression) {
-            for (uc in parent.catchClauses){
-                if(uc.typeReferences.toString().contains("java.lang.Exception")|| uc.typeReferences.toString().contains("java.lang.ArrayIndexOutOfBoundsException")){
+            for (uc in parent.catchClauses) {
+                if (uc.typeReferences.toString().contains("java.lang.Exception") || uc.typeReferences.toString().contains("java.lang.ArrayIndexOutOfBoundsException")) {
                     return
                 }
             }
@@ -69,7 +69,7 @@ class IndexOutOfBoundsDetector : Detector(), Detector.UastScanner {
             return element
         } else if (element is UTryExpression) {
             return element
-        }else if (element is UMethod) {
+        } else if (element is UMethod) {
             return null
         } else {
             return hasIf(element?.uastParent)

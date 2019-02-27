@@ -26,6 +26,10 @@ android {
     }
 }
 
+/**
+ * 重要：
+ * debug模式调用lintVitalRelease，作用：如果lint检测不通过，则停止编译
+ */
 project.afterEvaluate {
     tasks.matching {
         it.name.equals('processDebugJavaRes')
